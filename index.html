@@ -153,192 +153,218 @@
     </div>
 
     <script>
-      let allData = [];
+  let allData = [];
 
-      function getDataCallback(data) {
-        if (typeof data === 'string' && data.startsWith('Lỗi')) {
-          showError({ message: data });
-        } else {
-          displayData(data);
-        }
-      }
+  function getDataCallback(data) {
+    if (typeof data === 'string' && data.startsWith('Lỗi')) {
+      showError({ message: data });
+    } else {
+      displayData(data);
+    }
+  }
 
-      function appendDataCallback(message) {
-        alert(message);
-        if (!message.startsWith('Lỗi')) {
-          loadScript('getData', getDataCallback);
-        } else {
-          showError({ message });
-        }
-      }
-
-      function getPdfUrlCallback(pdfUrl) {
-        if (pdfUrl && !pdfUrl.startsWith('Lỗi')) {
-          document.getElementById('pdfFrame').src = pdfUrl;
-          document.getElementById('pdfModal').style.display = 'block';
-        } else {
-          alert('Không tìm thấy URL PDF cho văn bản này hoặc ' + pdfUrl);
-        }
-      }
-
-      function loadScript(action, callback, params = {}) {
-        const script = document.createElement('script');
-        const url = new URL('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec');
-        url.searchParams.append('callback', callback.name);
-        url.searchParams.append('action', action);
-        for (const [key, value] of Object.entries(params)) {
-          url.searchParams.append(key, value);
-        }
-        script.src = url.toString();
-        document.head.appendChild(script);
-        script.onload = () => script.remove();
-      }
-
-      // Load initial data
+  function appendDataCallback(message) {
+    alert(message);
+    if (!message.startsWith('Lỗi')) {
       loadScript('getData', getDataCallback);
+    } else {
+      showError({ message });
+    }
+  }
 
-      function updateClock() {
-        const now = new Date();
-        const options = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Ho_Chi_Minh', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
-        const formattedTime = now.toLocaleString('en-US', options).replace(',', '');
-        document.getElementById('clock').textContent = formattedTime;
+  function getPdfUrlCallback(pdfUrl) {
+    if (pdfUrl && !pdfUrl.startsWith('Lỗi')) {
+      document.getElementById('pdfFrame').src = pdfUrl;
+      document.getElementById('pdfModal').style.display = 'block';
+    } else {
+      alert('Không tìm thấy URL PDF cho văn bản này hoặc ' + pdfUrl);
+    }
+  }
+
+  function loadScript(action, callback, params = {}) {
+    const script = document.createElement('script');
+    const url = new URL('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec');
+    url.searchParams.append('callback', callback.name);
+    url.searchParams.append('action', action);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.append(key, value);
+    }
+    script.src = url.toString();
+    document.head.appendChild(script);
+    script.onload = () => script.remove();
+  }
+
+  // Load initial data
+  loadScript('getData', getDataCallback);
+
+  function updateClock() {
+    const now = new Date();
+    const options = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Ho_Chi_Minh', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+    const formattedTime = now.toLocaleString('en-US', options).replace(',', '');
+    document.getElementById('clock').textContent = formattedTime;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function updateWeather() {
+    const select = document.querySelector('.location-select');
+    const selectedOption = select.options[select.selectedIndex].value;
+    console.log('Selected weather:', selectedOption);
+  }
+
+  function displayData(data) {
+    allData = data || [];
+    const errorMessage = document.querySelector('#errorMessage');
+    const errorMessageDiv = document.querySelector('#errorMessageDiv');
+    errorMessage.innerHTML = '';
+    errorMessageDiv.innerHTML = '';
+
+    if (!data || !Array.isArray(data) || data.length <= 1) {
+      errorMessage.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
+      errorMessageDiv.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
+      return;
+    }
+
+    if (!data[0] || data[0].length < 5) {
+      errorMessage.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
+      errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
+      return;
+    }
+
+    renderTable(data.slice(1));
+    renderDivs(data.slice(1));
+  }
+
+  function renderTable(rows) {
+    const headerRow = document.querySelector('#headerRow');
+    const dataBody = document.querySelector('#dataBody');
+    headerRow.innerHTML = '';
+    dataBody.innerHTML = '';
+
+    // Kiểm tra allData và allData[0] trước khi gọi forEach
+    if (!allData || !Array.isArray(allData) || !allData[0] || !Array.isArray(allData[0])) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 5;
+      td.textContent = 'Dữ liệu chưa sẵn sàng!';
+      tr.appendChild(td);
+      dataBody.appendChild(tr);
+      return;
+    }
+
+    allData[0].forEach(header => {
+      const th = document.createElement('th');
+      th.textContent = header || '';
+      headerRow.appendChild(th);
+    });
+
+    if (!rows || !rows.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = '5';
+      td.textContent = 'Không tìm thấy văn bản!';
+      tr.appendChild(td);
+      dataBody.appendChild(tr);
+      return;
+    }
+
+    rows.forEach(row => {
+      const tr = document.createElement('tr');
+      row.forEach(cell => {
+        const td = document.createElement('td');
+        td.textContent = cell || '';
+        tr.appendChild(td);
+      });
+      dataBody.appendChild(tr);
+    });
+  }
+
+  function renderDivs(rows) {
+    const container = document.querySelector('#documentsContainer');
+    container.innerHTML = '';
+    if (!rows || !rows.length) {
+      const p = document.createElement('p');
+      p.textContent = 'Không tìm thấy văn bản!';
+      container.appendChild(p);
+      return;
+    }
+    rows.forEach((row, index) => {
+      const card = document.createElement('div');
+      card.className = 'document-card';
+      const title = `${row[1] || ''} - ${row[0] || ''}`;
+      card.innerHTML = `
+        <span class="number">${index + 1}</span>
+        <div class="title">${title}</div>
+        <div class="date">Ngày ban hành: ${row[4] || ''}</div>
+        <div class="status">Trạng thái: Chưa thông qua</div>
+        <div class="actions">
+          <button onclick="viewPdf(${index})">Xem PDF</button>
+          <button onclick="alert('Chức năng tải về chưa được triển khai!')">Tải về</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function searchData() {
+    const searchTerm = document.querySelector('#searchInput').value.toLowerCase();
+    const filteredData = allData.slice(1).filter(row => 
+      (row[1] && row[1].toLowerCase().includes(searchTerm)) || 
+      (row[2] && row[2].toLowerCase().includes(searchTerm))
+    );
+    renderTable(filteredData);
+    renderDivs(filteredData);
+  }
+
+  function submitData() {
+    const rowData = [
+      document.querySelector('#inputSoKyHieu').value,
+      document.querySelector('#inputTrichYeu').value,
+      document.querySelector('#inputCoQuan').value,
+      document.querySelector('#inputNgayBanHanh').value,
+      document.querySelector('#inputPdfUrl').value.trim()
+    ];
+    if (rowData.some(field => !field)) {
+      alert('Vui lòng điền đầy đủ các trường!');
+      return;
+    }
+    loadScript('appendData', appendDataCallback, { data: JSON.stringify(rowData) });
+  }
+
+  function showError(error) {
+    document.querySelector('#errorMessage').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
+    document.querySelector('#errorMessageDiv').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
+  }
+
+  function openTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+    document.querySelector(`#${tabId}`).classList.add('active');
+    document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
+    if (tabId === 'tableView') {
+      // Kiểm tra dữ liệu trước khi render
+      if (allData && allData.length > 0) {
+        renderTable(allData.slice(1));
+      } else {
+        renderTable([]); // Hiển thị bảng trống nếu dữ liệu chưa sẵn
       }
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      function updateWeather() {
-        const select = document.querySelector('.location-select');
-        const selectedOption = select.options[select.selectedIndex].value;
-        console.log('Selected weather:', selectedOption);
+    } else if (tabId === 'divView') {
+      if (allData && allData.length > 0) {
+        renderDivs(allData.slice(1));
+      } else {
+        renderDivs([]);
       }
+    }
+  }
 
-      function displayData(data) {
-        allData = data || [];
-        const errorMessage = document.querySelector('#errorMessage');
-        const errorMessageDiv = document.querySelector('#errorMessageDiv');
-        errorMessage.innerHTML = '';
-        errorMessageDiv.innerHTML = '';
+  function viewPdf(rowIndex) {
+    loadScript('getPdfUrl', getPdfUrlCallback, { rowIndex });
+  }
 
-        if (!data || !Array.isArray(data) || data.length <= 1) {
-          errorMessage.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
-          errorMessageDiv.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
-          return;
-        }
-
-        if (!data[0] || data[0].length < 5) {
-          errorMessage.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
-          errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
-          return;
-        }
-
-        renderTable(data.slice(1));
-        renderDivs(data.slice(1));
-      }
-
-      function renderTable(rows) {
-        const headerRow = document.querySelector('#headerRow');
-        const dataBody = document.querySelector('#dataBody');
-        headerRow.innerHTML = '';
-        dataBody.innerHTML = '';
-        allData[0].forEach(header => {
-          const th = document.createElement('th');
-          th.textContent = header || '';
-          headerRow.appendChild(th);
-        });
-        if (!rows || rows.length === 0) {
-          const tr = document.createElement('tr');
-          const td = document.createElement('td');
-          td.colSpan = 5;
-          td.textContent = 'Không tìm thấy văn bản!';
-          tr.appendChild(td);
-          dataBody.appendChild(tr);
-          return;
-        }
-        rows.forEach(row => {
-          const tr = document.createElement('tr');
-          row.forEach(cell => {
-            const td = document.createElement('td');
-            td.textContent = cell || '';
-            tr.appendChild(td);
-          });
-          dataBody.appendChild(tr);
-        });
-      }
-
-      function renderDivs(rows) {
-        const container = document.querySelector('#documentsContainer');
-        container.innerHTML = '';
-        if (!rows || rows.length === 0) {
-          const p = document.createElement('p');
-          p.textContent = 'Không tìm thấy văn bản!';
-          container.appendChild(p);
-          return;
-        }
-        rows.forEach((row, index) => {
-          const card = document.createElement('div');
-          card.className = 'document-card';
-          const title = `${row[1] || ''} - ${row[2] || ''}`;
-          card.innerHTML = `
-            <span class="number">${index + 1}</span>
-            <div class="title">${title}</div>
-            <div class="date">Ngày ban hành: ${row[4] || ''}</div>
-            <div class="status">Trạng thái: Chưa thông qua</div>
-            <div class="actions">
-              <button onclick="viewPdf(${index + 1})">Xem PDF</button>
-              <button onclick="alert('Chức năng tải về chưa được triển khai!')">Tải về</button>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      }
-
-      function searchData() {
-        const searchTerm = document.querySelector('#searchInput').value.toLowerCase();
-        const filteredData = allData.slice(1).filter(row => 
-          (row[1] && row[1].toLowerCase().includes(searchTerm)) || 
-          (row[2] && row[2].toLowerCase().includes(searchTerm))
-        );
-        renderTable(filteredData);
-        renderDivs(filteredData);
-      }
-
-      function submitData() {
-        const rowData = [
-          document.querySelector('#inputSoKyHieu').value,
-          document.querySelector('#inputTrichYeu').value,
-          document.querySelector('#inputCoQuan').value,
-          document.querySelector('#inputNgayBanHanh').value,
-          document.querySelector('#inputPdfUrl').value
-        ];
-        if (rowData.some(field => !field)) {
-          alert('Vui lòng điền đầy đủ các trường!');
-          return;
-        }
-        loadScript('appendData', appendDataCallback, { data: JSON.stringify(rowData) });
-      }
-
-      function showError(error) {
-        document.querySelector('#errorMessage').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
-        document.querySelector('#errorMessageDiv').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
-      }
-
-      function openTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
-        document.querySelector(`#${tabId}`).classList.add('active');
-        document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
-        if (tabId === 'tableView') renderTable(allData.slice(1));
-        else if (tabId === 'divView') renderDivs(allData.slice(1));
-      }
-
-      function viewPdf(rowIndex) {
-        loadScript('getPdfUrl', getPdfUrlCallback, { rowIndex: rowIndex - 1 });
-      }
-
-      function closePdfModal() {
-        document.getElementById('pdfModal').style.display = 'none';
-        document.getElementById('pdfFrame').src = '';
-      }
-    </script>
+  function closePdfModal() {
+    document.getElementById('pdfModal').style.display = 'none';
+    document.getElementById('pdfFrame').value = '';
+  }
+</script>
   </body>
 </html>
