@@ -297,13 +297,18 @@
       </div>
     </div>
 
-    <script>
+<script>
       let allData = [];
 
-      google.script.run
-        .withSuccessHandler(displayData)
-        .withFailureHandler(showError)
-        .getData();
+      // Lấy dữ liệu từ Apps Script
+      fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getData' }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => response.json())
+      .then(data => displayData(data))
+      .catch(error => showError(error));
 
       function updateClock() {
         const now = new Date();
@@ -334,8 +339,8 @@
         }
 
         if (!data[0] || data[0].length < 5) {
-          errorMessage.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành. Tiêu đề thực tế: ${JSON.stringify(data[0])}`;
-          errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành. Tiêu đề thực tế: ${JSON.stringify(data[0])}`;
+          errorMessage.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
+          errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
           return;
         }
 
@@ -422,18 +427,24 @@
           alert('Vui lòng điền đầy đủ các trường!');
           return;
         }
-        google.script.run
-          .withSuccessHandler(onSuccess)
-          .withFailureHandler(showError)
-          .appendData(rowData);
-      }
-
-      function onSuccess(message) {
-        alert(message);
-        google.script.run
-          .withSuccessHandler(displayData)
-          .withFailureHandler(showError)
-          .getData();
+        fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'appendData', data: rowData }),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.text())
+        .then(message => {
+          alert(message);
+          fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+            method: 'POST',
+            body: JSON.stringify({ action: 'getData' }),
+            headers: { 'Content-Type': 'application/json' }
+          })
+          .then(response => response.json())
+          .then(data => displayData(data))
+          .catch(error => showError(error));
+        })
+        .catch(error => showError(error));
       }
 
       function showError(error) {
@@ -451,16 +462,21 @@
       }
 
       function viewPdf(rowIndex) {
-        google.script.run
-          .withSuccessHandler(function(pdfUrl) {
-            if (pdfUrl) {
-              document.getElementById('pdfFrame').src = pdfUrl;
-              document.getElementById('pdfModal').style.display = 'block';
-            } else {
-              alert('Không tìm thấy URL PDF cho văn bản này!');
-            }
-          })
-          .getPdfUrl(rowIndex - 1);
+        fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getPdfUrl', rowIndex: rowIndex - 1 }),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.text())
+        .then(pdfUrl => {
+          if (pdfUrl) {
+            document.getElementById('pdfFrame').src = pdfUrl;
+            document.getElementById('pdfModal').style.display = 'block';
+          } else {
+            alert('Không tìm thấy URL PDF cho văn bản này!');
+          }
+        })
+        .catch(error => showError(error));
       }
 
       function closePdfModal() {
