@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -43,6 +44,12 @@
       .pdf-modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; width: 80%; height: 80%; }
       .pdf-modal-content iframe { width: 100%; height: 100%; border: none; }
       .pdf-modal-close { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; }
+      .detail-container { padding: 20px; background-color: #fff; border: 1px solid #ddd; border-radius: 5px; }
+      .detail-container h2 { margin-top: 0; color: #007bff; }
+      .detail-container p { margin: 10px 0; }
+      .detail-container .label { font-weight: bold; }
+      .detail-container .back-button { margin-top: 20px; background-color: #6c757d; }
+      .detail-container .back-button:hover { background-color: #5a6268; }
       @media (max-width: 1200px) {
         body { width: 100%; padding: 0 10px; }
         .header-container { flex-direction: column; gap: 10px; }
@@ -93,7 +100,7 @@
           <option value="Đà Nẵng, 26° - 30°">Đà Nẵng, 26° - 30°</option>
         </select>
       </div>
-      <div class="clock" id="clock">12:10 AM +07, Wednesday, June 11, 2025</div>
+      <div class="clock" id="clock"></div>
     </div>
     <div class="marquee-container">
       <div class="marquee">
@@ -145,6 +152,18 @@
       <button onclick="submitData()">Submit</button>
     </div>
 
+    <div id="detailView" class="tab-content">
+      <div class="detail-container">
+        <h2>Chi tiết Văn bản</h2>
+        <p><span class="label">Số/ký hiệu:</span> <span id="detailSoKyHieu"></span></p>
+        <p><span class="label">Trích yếu:</span> <span id="detailTrichYeu"></span></p>
+        <p><span class="label">Cơ quan ban hành:</span> <span id="detailCoQuan"></span></p>
+        <p><span class="label">Ngày ban hành:</span> <span id="detailNgayBanHanh"></span></p>
+        <p><span class="label">PDF URL:</span> <a id="detailPdfUrl" href="#" target="_blank">Xem PDF</a></p>
+        <button class="back-button" onclick="openTab('divView')">Quay lại</button>
+      </div>
+    </div>
+
     <div id="pdfModal" class="pdf-modal">
       <div class="pdf-modal-content">
         <span class="pdf-modal-close" onclick="closePdfModal()">×</span>
@@ -154,6 +173,7 @@
 
     <script>
       let allData = [];
+      let currentDocumentIndex = null;
 
       function getDataCallback(data) {
         if (typeof data === 'string' && data.startsWith('Lỗi')) {
@@ -174,14 +194,21 @@
 
       function getPdfUrlCallback(pdfUrl) {
         if (pdfUrl && !pdfUrl.startsWith('Lỗi')) {
-          document.getElementById('pdfFrame').src = pdfUrl;
-          document.getElementById('pdfModal').style.display = 'block';
+          const fileId = pdfUrl.match(/[-\w]{25,}/)?.[0];
+          if (fileId) {
+            const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+            document.getElementById('pdfFrame').src = embedUrl;
+            document.getElementById('pdfModal').style.display = 'block';
+          } else {
+            alert('URL PDF không hợp lệ!');
+          }
         } else {
-          alert('Không tìm thấy URL PDF cho văn bản này hoặc ' + pdfUrl);
+          alert('Không tìm thấy URL PDF hoặc ' + pdfUrl);
         }
       }
 
       function loadScript(action, callback, params = {}) {
+        console.log('Gửi JSONP:', { action, params });
         const script = document.createElement('script');
         const url = new URL('https://script.google.com/macros/s/AKfycbzhLIUJmGcgYhbaJkoTm4fmdbFtLkxA2R9cN9Y8YavpGStTr2atwWeKhl3uLaqBaUxw/exec');
         url.searchParams.append('callback', callback.name);
@@ -190,11 +217,11 @@
           url.searchParams.append(key, value);
         }
         script.src = url.toString();
+        console.log('URL JSONP:', script.src);
         document.head.appendChild(script);
         script.onload = () => script.remove();
       }
 
-      // Load initial data
       loadScript('getData', getDataCallback);
 
       function updateClock() {
@@ -231,8 +258,8 @@
           return;
         }
 
-        renderTable(data.slice(1));
-        renderDivs(data.slice(1));
+        renderTable(allData.slice(1));
+        renderDivs(allData.slice(1));
       }
 
       function renderTable(rows) {
@@ -240,12 +267,24 @@
         const dataBody = document.querySelector('#dataBody');
         headerRow.innerHTML = '';
         dataBody.innerHTML = '';
+
+        if (!allData || !Array.isArray(allData) || !allData[0] || !Array.isArray(allData[0])) {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 5;
+          td.textContent = 'Dữ liệu chưa sẵn sàng!';
+          tr.appendChild(td);
+          dataBody.appendChild(tr);
+          return;
+        }
+
         allData[0].forEach(header => {
           const th = document.createElement('th');
           th.textContent = header || '';
           headerRow.appendChild(th);
         });
-        if (!rows || rows.length === 0) {
+
+        if (!rows || !rows.length) {
           const tr = document.createElement('tr');
           const td = document.createElement('td');
           td.colSpan = 5;
@@ -254,13 +293,16 @@
           dataBody.appendChild(tr);
           return;
         }
-        rows.forEach(row => {
+
+        rows.forEach((row, index) => {
           const tr = document.createElement('tr');
           row.forEach(cell => {
             const td = document.createElement('td');
             td.textContent = cell || '';
             tr.appendChild(td);
           });
+          tr.onclick = () => showDetail(index + 1);
+          tr.style.cursor = 'pointer';
           dataBody.appendChild(tr);
         });
       }
@@ -268,7 +310,7 @@
       function renderDivs(rows) {
         const container = document.querySelector('#documentsContainer');
         container.innerHTML = '';
-        if (!rows || rows.length === 0) {
+        if (!rows || !rows.length) {
           const p = document.createElement('p');
           p.textContent = 'Không tìm thấy văn bản!';
           container.appendChild(p);
@@ -284,6 +326,7 @@
             <div class="date">Ngày ban hành: ${row[4] || ''}</div>
             <div class="status">Trạng thái: Chưa thông qua</div>
             <div class="actions">
+              <button onclick="showDetail(${index + 1})">Xem</button>
               <button onclick="viewPdf(${index + 1})">Xem PDF</button>
               <button onclick="alert('Chức năng tải về chưa được triển khai!')">Tải về</button>
             </div>
@@ -303,12 +346,24 @@
       }
 
       function submitData() {
+        const dateInput = document.querySelector('#inputNgayBanHanh').value;
+        let formattedDate = '';
+        if (dateInput) {
+          const date = new Date(dateInput);
+          if (!isNaN(date)) {
+            formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+          } else {
+            alert('Ngày ban hành không hợp lệ!');
+            return;
+          }
+        }
+
         const rowData = [
           document.querySelector('#inputSoKyHieu').value,
           document.querySelector('#inputTrichYeu').value,
           document.querySelector('#inputCoQuan').value,
-          document.querySelector('#inputNgayBanHanh').value,
-          document.querySelector('#inputPdfUrl').value
+          formattedDate,
+          document.querySelector('#inputPdfUrl').value.trim()
         ];
         if (rowData.some(field => !field)) {
           alert('Vui lòng điền đầy đủ các trường!');
@@ -326,9 +381,38 @@
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
         document.querySelector(`#${tabId}`).classList.add('active');
-        document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
-        if (tabId === 'tableView') renderTable(allData.slice(1));
-        else if (tabId === 'divView') renderDivs(allData.slice(1));
+        document.querySelector(`[onclick="openTab('${tabId}')"]`)?.classList.add('active');
+        if (tabId === 'tableView') {
+          if (allData && allData.length > 0) {
+            renderTable(allData.slice(1));
+          } else {
+            renderTable([]);
+          }
+        } else if (tabId === 'divView') {
+          if (allData && allData.length > 0) {
+            renderDivs(allData.slice(1));
+          } else {
+            renderDivs([]);
+          }
+        }
+      }
+
+      function showDetail(index) {
+        currentDocumentIndex = index;
+        if (allData && allData[index]) {
+          const row = allData[index];
+          document.getElementById('detailSoKyHieu').textContent = row[1] || '';
+          document.getElementById('detailTrichYeu').textContent = row[2] || '';
+          document.getElementById('detailCoQuan').textContent = row[3] || '';
+          document.getElementById('detailNgayBanHanh').textContent = row[4] || '';
+          const pdfUrl = row[5] || '';
+          const pdfLink = document.getElementById('detailPdfUrl');
+          pdfLink.href = pdfUrl;
+          pdfLink.textContent = pdfUrl ? 'Xem PDF' : 'Không có PDF';
+          openTab('detailView');
+        } else {
+          alert('Không tìm thấy thông tin văn bản!');
+        }
       }
 
       function viewPdf(rowIndex) {
