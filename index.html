@@ -1,11 +1,472 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Trang cá nhân của tôi</title>
-</head>
-<body>
-    <h1>Chào mừng đến với trang GitHub Pages của tôi!</h1>
-    <p>Đây là trang web tĩnh được lưu trữ trên GitHub Pages.</p>
-</body>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0 auto;
+        padding: 0;
+        width: 1200px;
+        box-sizing: border-box;
+      }
+      .banner {
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .separator-line {
+        border-bottom: 1px solid #ccc;
+        margin: 0;
+      }
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #f2f2f2;
+      }
+      .search-container {
+        display: flex;
+        align-items: center;
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      #searchInput {
+        border: none;
+        padding: 8px;
+        width: 200px;
+        outline: none;
+        background-color: transparent;
+        box-sizing: border-box;
+      }
+      .search-button {
+        background-color: transparent;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        color: #007bff;
+      }
+      .location-select {
+        border: none;
+        background-color: transparent;
+        padding: 8px;
+        margin-left: 10px;
+        color: #333;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+      .clock {
+        font-size: 16px;
+        color: #333;
+      }
+      .marquee-container {
+        background-color: #e9ecef;
+        padding: 5px 0;
+        overflow: hidden;
+      }
+      .marquee {
+        white-space: nowrap;
+        overflow: hidden;
+        animation: marquee 15s linear infinite;
+        color: #dc3545;
+      }
+      @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+      }
+      .nav-container {
+        padding: 10px 20px;
+        background-color: #f8f9fa;
+      }
+      .nav-links a {
+        margin-right: 20px;
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+      }
+      .nav-links a:hover {
+        text-decoration: underline;
+      }
+      .tabs { margin-bottom: 20px; }
+      .tab-button { padding: 10px 20px; margin-right: 5px; background-color: #f2f2f2; border: none; cursor: pointer; }
+      .tab-button.active { background-color: #4CAF50; color: white; }
+      .tab-content { display: none; }
+      .tab-content.active { display: block; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+      th { background-color: #f2f2f2; }
+      .form-group { margin-bottom: 15px; }
+      button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+      button:hover { background-color: #45a049; }
+      input[type="date"], input[type="text"] { padding: 8px; }
+      .error { color: red; }
+      .document-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9; position: relative; }
+      .document-card .number { position: absolute; top: 10px; left: 10px; background: #007bff; color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px; }
+      .document-card .title { font-weight: bold; margin: 5px 0; }
+      .document-card .date { color: #666; }
+      .document-card .status { color: #888; }
+      .document-card .actions { margin-top: 10px; }
+      .document-card .actions button { padding: 5px 10px; margin-right: 5px; background-color: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+      .document-card .actions button:hover { background-color: #0056b3; }
+      .pdf-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+      .pdf-modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; width: 80%; height: 80%; }
+      .pdf-modal-content iframe { width: 100%; height: 100%; border: none; }
+      .pdf-modal-close { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; }
+      @media (max-width: 1200px) {
+        body {
+          width: 100%;
+          padding: 0 10px;
+        }
+        .header-container {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .search-container {
+          width: 100%;
+        }
+        #searchInput {
+          width: 70%;
+        }
+        .location-select {
+          width: 30%;
+          margin-left: 0;
+        }
+        .nav-links a {
+          margin-right: 10px;
+        }
+        .document-card .number {
+          top: 5px;
+          left: 5px;
+          width: 20px;
+          height: 20px;
+          line-height: 20px;
+        }
+      }
+      @media (max-width: 768px) {
+        .banner {
+          font-size: 16px;
+          padding: 10px 0;
+        }
+        .header-container {
+          padding: 5px 10px;
+        }
+        #searchInput {
+          width: 60%;
+        }
+        .location-select {
+          width: 40%;
+        }
+        .clock {
+          font-size: 14px;
+        }
+        .nav-links a {
+          margin-right: 5px;
+        }
+        .tab-button {
+          padding: 8px 15px;
+          font-size: 14px;
+        }
+      }
+      @media (max-width: 480px) {
+        .banner {
+          font-size: 14px;
+          padding: 8px 0;
+        }
+        .header-container {
+          padding: 5px;
+        }
+        .search-container {
+          flex-direction: column;
+          width: 100%;
+        }
+        #searchInput {
+          width: 100%;
+          margin-bottom: 5px;
+        }
+        .location-select {
+          width: 100%;
+          margin-left: 0;
+          margin-top: 5px;
+        }
+        .clock {
+          font-size: 12px;
+          text-align: center;
+          margin-top: 5px;
+        }
+        .nav-links {
+          flex-direction: column;
+          align-items: center;
+        }
+        .nav-links a {
+          margin: 5px 0;
+        }
+        .tab-button {
+          padding: 6px 12px;
+          font-size: 12px;
+          margin: 2px;
+        }
+        .document-card .actions {
+          flex-direction: column;
+        }
+        .document-card .actions button {
+          width: 100%;
+          margin: 5px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      HỆ THỐNG VĂN BẢN PHÁP LÝ<br>
+      PHỤC VỤ CÔNG TÁC DỰ BÁO THỊ TRƯỜNG LAO ĐỘNG<br>
+      TẠI THÀNH PHỐ HỒ CHÍ MINH
+    </div>
+    <hr class="separator-line">
+    <div class="header-container">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Nhập từ khóa" onkeypress="if(event.key === 'Enter') searchData();">
+        <button class="search-button" onclick="searchData()">🔍</button>
+        <select class="location-select" onchange="updateWeather()">
+          <option value="Hà Nội, 27° - 29°">Hà Nội, 27° - 29°</option>
+          <option value="TP.HCM, 28° - 32°">TP.HCM, 28° - 32°</option>
+          <option value="Đà Nẵng, 26° - 30°">Đà Nẵng, 26° - 30°</option>
+        </select>
+      </div>
+      <div class="clock" id="clock">12:10 AM +07, Wednesday, June 11, 2025</div>
+    </div>
+    <div class="marquee-container">
+      <div class="marquee">
+        🚀 Thủ tướng Phạm Minh Chính thăm chính thức Malaysia, dự Hội nghị Cấp cao ASEAN lần thứ 46 🚀 Sửa đổi, bổ sung một số điều của Hiến pháp năm 20...
+      </div>
+    </div>
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="#" onclick="openTab('tableView')">Trang chủ</a>
+        <a href="#" onclick="openTab('divView')">Hệ thống văn bản</a>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-button active" onclick="openTab('tableView')">Danh sách (Bảng)</button>
+      <button class="tab-button" onclick="openTab('divView')">Danh sách (Div)</button>
+      <button class="tab-button" onclick="openTab('addDocument')">Thêm Văn bản</button>
+    </div>
+
+    <div id="tableView" class="tab-content active">
+      <table id="dataTable">
+        <thead><tr id="headerRow"></tr></thead>
+        <tbody id="dataBody"></tbody>
+      </table>
+      <div id="errorMessage" class="error"></div>
+    </div>
+
+    <div id="divView" class="tab-content">
+      <div id="documentsContainer"></div>
+      <div id="errorMessageDiv" class="error"></div>
+    </div>
+
+    <div id="addDocument" class="tab-content">
+      <h3>Thêm Văn bản Mới</h3>
+      <div class="form-group">
+        <label>Số/ký hiệu:</label><input type="text" id="inputSoKyHieu">
+      </div>
+      <div class="form-group">
+        <label>Trích yếu:</label><input type="text" id="inputTrichYeu">
+      </div>
+      <div class="form-group">
+        <label>Cơ quan ban hành:</label><input type="text" id="inputCoQuan">
+      </div>
+      <div class="form-group">
+        <label>Ngày ban hành:</label><input type="date" id="inputNgayBanHanh">
+      </div>
+      <div class="form-group">
+        <label>Google Drive PDF URL:</label><input type="text" id="inputPdfUrl" placeholder="Dán URL Google Drive công khai">
+      </div>
+      <button onclick="submitData()">Submit</button>
+    </div>
+
+    <div id="pdfModal" class="pdf-modal">
+      <div class="pdf-modal-content">
+        <span class="pdf-modal-close" onclick="closePdfModal()">×</span>
+        <iframe id="pdfFrame"></iframe>
+      </div>
+    </div>
+
+    <script>
+      let allData = [];
+
+      google.script.run
+        .withSuccessHandler(displayData)
+        .withFailureHandler(showError)
+        .getData();
+
+      function updateClock() {
+        const now = new Date();
+        const options = { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Ho_Chi_Minh', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+        const formattedTime = now.toLocaleString('en-US', options).replace(',', '');
+        document.getElementById('clock').textContent = formattedTime;
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      function updateWeather() {
+        const select = document.querySelector('.location-select');
+        const selectedOption = select.options[select.selectedIndex].value;
+        console.log('Selected weather:', selectedOption);
+      }
+
+      function displayData(data) {
+        allData = data || [];
+        const errorMessage = document.querySelector('#errorMessage');
+        const errorMessageDiv = document.querySelector('#errorMessageDiv');
+        errorMessage.innerHTML = '';
+        errorMessageDiv.innerHTML = '';
+
+        if (!data || !Array.isArray(data) || data.length <= 1) {
+          errorMessage.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
+          errorMessageDiv.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
+          return;
+        }
+
+        if (!data[0] || data[0].length < 5) {
+          errorMessage.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành. Tiêu đề thực tế: ${JSON.stringify(data[0])}`;
+          errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành. Tiêu đề thực tế: ${JSON.stringify(data[0])}`;
+          return;
+        }
+
+        renderTable(data.slice(1));
+        renderDivs(data.slice(1));
+      }
+
+      function renderTable(rows) {
+        const headerRow = document.querySelector('#headerRow');
+        const dataBody = document.querySelector('#dataBody');
+        headerRow.innerHTML = '';
+        dataBody.innerHTML = '';
+        allData[0].forEach(header => {
+          const th = document.createElement('th');
+          th.textContent = header || '';
+          headerRow.appendChild(th);
+        });
+        if (!rows || rows.length === 0) {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 5;
+          td.textContent = 'Không tìm thấy văn bản!';
+          tr.appendChild(td);
+          dataBody.appendChild(tr);
+          return;
+        }
+        rows.forEach(row => {
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const td = document.createElement('td');
+            td.textContent = cell || '';
+            tr.appendChild(td);
+          });
+          dataBody.appendChild(tr);
+        });
+      }
+
+      function renderDivs(rows) {
+        const container = document.querySelector('#documentsContainer');
+        container.innerHTML = '';
+        if (!rows || rows.length === 0) {
+          const p = document.createElement('p');
+          p.textContent = 'Không tìm thấy văn bản!';
+          container.appendChild(p);
+          return;
+        }
+        rows.forEach((row, index) => {
+          const card = document.createElement('div');
+          card.className = 'document-card';
+          const title = `${row[1] || ''} - ${row[2] || ''}`;
+          card.innerHTML = `
+            <span class="number">${index + 1}</span>
+            <div class="title">${title}</div>
+            <div class="date">Ngày ban hành: ${row[4] || ''}</div>
+            <div class="status">Trạng thái: Chưa thông qua</div>
+            <div class="actions">
+              <button onclick="viewPdf(${index + 1})">Xem PDF</button>
+              <button onclick="alert('Chức năng tải về chưa được triển khai!')">Tải về</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      function searchData() {
+        const searchTerm = document.querySelector('#searchInput').value.toLowerCase();
+        const filteredData = allData.slice(1).filter(row => 
+          (row[1] && row[1].toLowerCase().includes(searchTerm)) || 
+          (row[2] && row[2].toLowerCase().includes(searchTerm))
+        );
+        renderTable(filteredData);
+        renderDivs(filteredData);
+      }
+
+      function submitData() {
+        const rowData = [
+          document.querySelector('#inputSoKyHieu').value,
+          document.querySelector('#inputTrichYeu').value,
+          document.querySelector('#inputCoQuan').value,
+          document.querySelector('#inputNgayBanHanh').value,
+          document.querySelector('#inputPdfUrl').value
+        ];
+        if (rowData.some(field => !field)) {
+          alert('Vui lòng điền đầy đủ các trường!');
+          return;
+        }
+        google.script.run
+          .withSuccessHandler(onSuccess)
+          .withFailureHandler(showError)
+          .appendData(rowData);
+      }
+
+      function onSuccess(message) {
+        alert(message);
+        google.script.run
+          .withSuccessHandler(displayData)
+          .withFailureHandler(showError)
+          .getData();
+      }
+
+      function showError(error) {
+        document.querySelector('#errorMessage').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
+        document.querySelector('#errorMessageDiv').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
+      }
+
+      function openTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+        document.querySelector(`#${tabId}`).classList.add('active');
+        document.querySelector(`[onclick="openTab('${tabId}')"]`).classList.add('active');
+        if (tabId === 'tableView') renderTable(allData.slice(1));
+        else if (tabId === 'divView') renderDivs(allData.slice(1));
+      }
+
+      function viewPdf(rowIndex) {
+        google.script.run
+          .withSuccessHandler(function(pdfUrl) {
+            if (pdfUrl) {
+              document.getElementById('pdfFrame').src = pdfUrl;
+              document.getElementById('pdfModal').style.display = 'block';
+            } else {
+              alert('Không tìm thấy URL PDF cho văn bản này!');
+            }
+          })
+          .getPdfUrl(rowIndex - 1);
+      }
+
+      function closePdfModal() {
+        document.getElementById('pdfModal').style.display = 'none';
+        document.getElementById('pdfFrame').src = '';
+      }
+    </script>
+  </body>
 </html>
