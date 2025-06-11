@@ -3,96 +3,21 @@
   <head>
     <base target="_top">
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0 auto;
-        padding: 0;
-        width: 1200px;
-        box-sizing: border-box;
-      }
-      .banner {
-        background-color: #007bff;
-        color: white;
-        text-align: center;
-        padding: 15px 0;
-        font-size: 18px;
-        font-weight: bold;
-      }
-      .separator-line {
-        border-bottom: 1px solid #ccc;
-        margin: 0;
-      }
-      .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #f2f2f2;
-      }
-      .search-container {
-        display: flex;
-        align-items: center;
-        background-color: #f1f1f1;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        overflow: hidden;
-      }
-      #searchInput {
-        border: none;
-        padding: 8px;
-        width: 200px;
-        outline: none;
-        background-color: transparent;
-        box-sizing: border-box;
-      }
-      .search-button {
-        background-color: transparent;
-        border: none;
-        padding: 8px;
-        cursor: pointer;
-        color: #007bff;
-      }
-      .location-select {
-        border: none;
-        background-color: transparent;
-        padding: 8px;
-        margin-left: 10px;
-        color: #333;
-        cursor: pointer;
-        box-sizing: border-box;
-      }
-      .clock {
-        font-size: 16px;
-        color: #333;
-      }
-      .marquee-container {
-        background-color: #e9ecef;
-        padding: 5px 0;
-        overflow: hidden;
-      }
-      .marquee {
-        white-space: nowrap;
-        overflow: hidden;
-        animation: marquee 15s linear infinite;
-        color: #dc3545;
-      }
-      @keyframes marquee {
-        0% { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
-      }
-      .nav-container {
-        padding: 10px 20px;
-        background-color: #f8f9fa;
-      }
-      .nav-links a {
-        margin-right: 20px;
-        text-decoration: none;
-        color: #007bff;
-        font-weight: bold;
-      }
-      .nav-links a:hover {
-        text-decoration: underline;
-      }
+      body { font-family: Arial, sans-serif; margin: 0 auto; padding: 0; width: 1200px; box-sizing: border-box; }
+      .banner { background-color: #007bff; color: white; text-align: center; padding: 15px 0; font-size: 18px; font-weight: bold; }
+      .separator-line { border-bottom: 1px solid #ccc; margin: 0; }
+      .header-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #f2f2f2; }
+      .search-container { display: flex; align-items: center; background-color: #f1f1f1; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; }
+      #searchInput { border: none; padding: 8px; width: 200px; outline: none; background-color: transparent; box-sizing: border-box; }
+      .search-button { background-color: transparent; border: none; padding: 8px; cursor: pointer; color: #007bff; }
+      .location-select { border: none; background-color: transparent; padding: 8px; margin-left: 10px; color: #333; cursor: pointer; box-sizing: border-box; }
+      .clock { font-size: 16px; color: #333; }
+      .marquee-container { background-color: #e9ecef; padding: 5px 0; overflow: hidden; }
+      .marquee { white-space: nowrap; overflow: hidden; animation: marquee 15s linear infinite; color: #dc3545; }
+      @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+      .nav-container { padding: 10px 20px; background-color: #f8f9fa; }
+      .nav-links a { margin-right: 20px; text-decoration: none; color: #007bff; font-weight: bold; }
+      .nav-links a:hover { text-decoration: underline; }
       .tabs { margin-bottom: 20px; }
       .tab-button { padding: 10px 20px; margin-right: 5px; background-color: #f2f2f2; border: none; cursor: pointer; }
       .tab-button.active { background-color: #4CAF50; color: white; }
@@ -119,105 +44,35 @@
       .pdf-modal-content iframe { width: 100%; height: 100%; border: none; }
       .pdf-modal-close { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; }
       @media (max-width: 1200px) {
-        body {
-          width: 100%;
-          padding: 0 10px;
-        }
-        .header-container {
-          flex-direction: column;
-          gap: 10px;
-        }
-        .search-container {
-          width: 100%;
-        }
-        #searchInput {
-          width: 70%;
-        }
-        .location-select {
-          width: 30%;
-          margin-left: 0;
-        }
-        .nav-links a {
-          margin-right: 10px;
-        }
-        .document-card .number {
-          top: 5px;
-          left: 5px;
-          width: 20px;
-          height: 20px;
-          line-height: 20px;
-        }
+        body { width: 100%; padding: 0 10px; }
+        .header-container { flex-direction: column; gap: 10px; }
+        .search-container { width: 100%; }
+        #searchInput { width: 70%; }
+        .location-select { width: 30%; margin-left: 0; }
+        .nav-links a { margin-right: 10px; }
+        .document-card .number { top: 5px; left: 5px; width: 20px; height: 20px; line-height: 20px; }
       }
       @media (max-width: 768px) {
-        .banner {
-          font-size: 16px;
-          padding: 10px 0;
-        }
-        .header-container {
-          padding: 5px 10px;
-        }
-        #searchInput {
-          width: 60%;
-        }
-        .location-select {
-          width: 40%;
-        }
-        .clock {
-          font-size: 14px;
-        }
-        .nav-links a {
-          margin-right: 5px;
-        }
-        .tab-button {
-          padding: 8px 15px;
-          font-size: 14px;
-        }
+        .banner { font-size: 16px; padding: 10px 0; }
+        .header-container { padding: 5px 10px; }
+        #searchInput { width: 60%; }
+        .location-select { width: 40%; }
+        .clock { font-size: 14px; }
+        .nav-links a { margin-right: 5px; }
+        .tab-button { padding: 8px 15px; font-size: 14px; }
       }
       @media (max-width: 480px) {
-        .banner {
-          font-size: 14px;
-          padding: 8px 0;
-        }
-        .header-container {
-          padding: 5px;
-        }
-        .search-container {
-          flex-direction: column;
-          width: 100%;
-        }
-        #searchInput {
-          width: 100%;
-          margin-bottom: 5px;
-        }
-        .location-select {
-          width: 100%;
-          margin-left: 0;
-          margin-top: 5px;
-        }
-        .clock {
-          font-size: 12px;
-          text-align: center;
-          margin-top: 5px;
-        }
-        .nav-links {
-          flex-direction: column;
-          align-items: center;
-        }
-        .nav-links a {
-          margin: 5px 0;
-        }
-        .tab-button {
-          padding: 6px 12px;
-          font-size: 12px;
-          margin: 2px;
-        }
-        .document-card .actions {
-          flex-direction: column;
-        }
-        .document-card .actions button {
-          width: 100%;
-          margin: 5px 0;
-        }
+        .banner { font-size: 14px; padding: 8px 0; }
+        .header-container { padding: 5px; }
+        .search-container { flex-direction: column; width: 100%; }
+        #searchInput { width: 100%; margin-bottom: 5px; }
+        .location-select { width: 100%; margin-left: 0; margin-top: 5px; }
+        .clock { font-size: 12px; text-align: center; margin-top: 5px; }
+        .nav-links { flex-direction: column; align-items: center; }
+        .nav-links a { margin: 5px 0; }
+        .tab-button { padding: 6px 12px; font-size: 12px; margin: 2px; }
+        .document-card .actions { flex-direction: column; }
+        .document-card .actions button { width: 100%; margin: 5px 0; }
       }
     </style>
   </head>
@@ -241,9 +96,9 @@
       <div class="clock" id="clock">12:10 AM +07, Wednesday, June 11, 2025</div>
     </div>
     <div class="marquee-container">
-      <!--div class="marquee">
+      <div class="marquee">
         🚀 Thủ tướng Phạm Minh Chính thăm chính thức Malaysia, dự Hội nghị Cấp cao ASEAN lần thứ 46 🚀 Sửa đổi, bổ sung một số điều của Hiến pháp năm 20...
-    </div-->
+      </div>
     </div>
     <div class="nav-container">
       <div class="nav-links">
@@ -297,18 +152,50 @@
       </div>
     </div>
 
-<script>
+    <script>
       let allData = [];
 
-      // Lấy dữ liệu từ Apps Script
-      fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
-        method: 'POST',
-        body: JSON.stringify({ action: 'getData' }),
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => response.json())
-      .then(data => displayData(data))
-      .catch(error => showError(error));
+      function getDataCallback(data) {
+        if (typeof data === 'string' && data.startsWith('Lỗi')) {
+          showError({ message: data });
+        } else {
+          displayData(data);
+        }
+      }
+
+      function appendDataCallback(message) {
+        alert(message);
+        if (!message.startsWith('Lỗi')) {
+          loadScript('getData', getDataCallback);
+        } else {
+          showError({ message });
+        }
+      }
+
+      function getPdfUrlCallback(pdfUrl) {
+        if (pdfUrl && !pdfUrl.startsWith('Lỗi')) {
+          document.getElementById('pdfFrame').src = pdfUrl;
+          document.getElementById('pdfModal').style.display = 'block';
+        } else {
+          alert('Không tìm thấy URL PDF cho văn bản này hoặc ' + pdfUrl);
+        }
+      }
+
+      function loadScript(action, callback, params = {}) {
+        const script = document.createElement('script');
+        const url = new URL('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec');
+        url.searchParams.append('callback', callback.name);
+        url.searchParams.append('action', action);
+        for (const [key, value] of Object.entries(params)) {
+          url.searchParams.append(key, value);
+        }
+        script.src = url.toString();
+        document.head.appendChild(script);
+        script.onload = () => script.remove();
+      }
+
+      // Load initial data
+      loadScript('getData', getDataCallback);
 
       function updateClock() {
         const now = new Date();
@@ -427,24 +314,7 @@
           alert('Vui lòng điền đầy đủ các trường!');
           return;
         }
-        fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
-          method: 'POST',
-          body: JSON.stringify({ action: 'appendData', data: rowData }),
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then(response => response.text())
-        .then(message => {
-          alert(message);
-          fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
-            method: 'POST',
-            body: JSON.stringify({ action: 'getData' }),
-            headers: { 'Content-Type': 'application/json' }
-          })
-          .then(response => response.json())
-          .then(data => displayData(data))
-          .catch(error => showError(error));
-        })
-        .catch(error => showError(error));
+        loadScript('appendData', appendDataCallback, { data: JSON.stringify(rowData) });
       }
 
       function showError(error) {
@@ -462,21 +332,7 @@
       }
 
       function viewPdf(rowIndex) {
-        fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
-          method: 'POST',
-          body: JSON.stringify({ action: 'getPdfUrl', rowIndex: rowIndex - 1 }),
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then(response => response.text())
-        .then(pdfUrl => {
-          if (pdfUrl) {
-            document.getElementById('pdfFrame').src = pdfUrl;
-            document.getElementById('pdfModal').style.display = 'block';
-          } else {
-            alert('Không tìm thấy URL PDF cho văn bản này!');
-          }
-        })
-        .catch(error => showError(error));
+        loadScript('getPdfUrl', getPdfUrlCallback, { rowIndex: rowIndex - 1 });
       }
 
       function closePdfModal() {
