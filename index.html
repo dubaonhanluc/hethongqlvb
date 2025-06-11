@@ -183,7 +183,7 @@
 
       function loadScript(action, callback, params = {}) {
         const script = document.createElement('script');
-        const url = new URL('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec');
+        const url = new URL('https://script.google.com/macros/s/AKfycbzhLIUJmGcgYhbaJkoTm4fmdbFtLkxA2R9cN9Y8YavpGStTr2atwWeKhl3uLaqBaUxw/exec');
         url.searchParams.append('callback', callback.name);
         url.searchParams.append('action', action);
         for (const [key, value] of Object.entries(params)) {
