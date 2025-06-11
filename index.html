@@ -241,9 +241,9 @@
       <div class="clock" id="clock">12:10 AM +07, Wednesday, June 11, 2025</div>
     </div>
     <div class="marquee-container">
-      <div class="marquee">
+      <!--div class="marquee">
         🚀 Thủ tướng Phạm Minh Chính thăm chính thức Malaysia, dự Hội nghị Cấp cao ASEAN lần thứ 46 🚀 Sửa đổi, bổ sung một số điều của Hiến pháp năm 20...
-      </div>
+    </div-->
     </div>
     <div class="nav-container">
       <div class="nav-links">
@@ -301,7 +301,7 @@
       let allData = [];
 
       // Lấy dữ liệu từ Apps Script
-      fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+      fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
         method: 'POST',
         body: JSON.stringify({ action: 'getData' }),
         headers: { 'Content-Type': 'application/json' }
@@ -427,7 +427,7 @@
           alert('Vui lòng điền đầy đủ các trường!');
           return;
         }
-        fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
           method: 'POST',
           body: JSON.stringify({ action: 'appendData', data: rowData }),
           headers: { 'Content-Type': 'application/json' }
@@ -435,7 +435,7 @@
         .then(response => response.text())
         .then(message => {
           alert(message);
-          fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+          fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
             method: 'POST',
             body: JSON.stringify({ action: 'getData' }),
             headers: { 'Content-Type': 'application/json' }
@@ -462,7 +462,7 @@
       }
 
       function viewPdf(rowIndex) {
-        fetch('https://script.google.com/macros/s/AKfycbxB_-sG4549lcQjsL6uM3q1aD1bLfBGGnrMmJc1nWO-RfI7j8KOgXz070fhsQjUWB1m/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbxPxAFNiht-OCfRgWISY4azb6fsqVuolnNbeHseRBYNqpjD-o6vokLXoHyCRsMwDxKK/exec', {
           method: 'POST',
           body: JSON.stringify({ action: 'getPdfUrl', rowIndex: rowIndex - 1 }),
           headers: { 'Content-Type': 'application/json' }
