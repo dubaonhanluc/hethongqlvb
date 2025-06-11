@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html>
   <head>
@@ -210,7 +209,7 @@
       function loadScript(action, callback, params = {}) {
         console.log('Gửi JSONP:', { action, params });
         const script = document.createElement('script');
-        const url = new URL('https://script.google.com/macros/s/AKfycbzhLIUJmGcgYhbaJkoTm4fmdbFtLkxA2R9cN9Y8YavpGStTr2atwWeKhl3uLaqBaUxw/exec');
+        const url = new URL('https://script.google.com/macros/s/AKfycbz8WODqQ_ahIzDeH65Nu2LLoa74BkTFGrQnnHEB16e6T5_eWM9kq37-sQxMy8GcqxvR/exec');
         url.searchParams.append('callback', callback.name);
         url.searchParams.append('action', action);
         for (const [key, value] of Object.entries(params)) {
