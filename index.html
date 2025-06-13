@@ -9,11 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
       body { font-family: Arial, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
-      .banner_home {text-align: center; padding: 0px 0px 3px 0px;font-size: 1.2rem; font-weight: bold; background: url(https://ai.phapluat.gov.vn/images/lp/bg-trongdong.png); float: left; position: relative;background-color: #002b7f; background-position: center; box-shadow: 0 4px 10px rgba(182, 182, 182, 0.18);color: #fff;position: fixed;z-index: 10;top: 0; right: 0;left: 0;}
-      .banner_db{padding: 10px;}
-      .bg-light_db{--bs-bg-opacity: 0.1; background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;width: 60%;border-radius: 10px;}
+      .banner_home { text-align: center; font-size: 1.2rem; font-weight: bold; background: url(https://ai.phapluat.gov.vn/images/lp/bg-trongdong.png); background-color: #002b7f; background-position: center; box-shadow: 0 4px 10px rgba(182, 182, 182, 0.18); color: #fff; position: fixed; z-index: 10; top: 0; right: 0; left: 0; }
+      .banner_db { padding: 10px; }
+      .bg-light_db { --bs-bg-opacity: 0.1; background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important; width: 60%; border-radius: 10px; margin: 0 auto; }
       .separator-line { border-bottom: 1px solid #ccc; margin: 0; }
-      .body_home{padding-top: 133px;width: 90%;}
+      .body_home { padding-top: 150px; width: 90%; margin: 0 auto; }
       .document-card { border-bottom: 1px solid #0000001a; padding: 15px; position: relative; }
       .document-card .number { position: absolute; top: 10px; left: 10px; background: #0000001a; color: white; border-radius: 10%; width: 24px; height: 24px; text-align: center; line-height: 24px; }
       .document-card .title { font-weight: bold; margin: 5px 0; }
@@ -25,37 +25,39 @@
       .pdf-modal-close { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; }
       .detail-container { padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
       .detail-container .label { font-weight: bold; }
-      footer { background-color:#002b7f; padding: 10px 0; text-align: center; color: #fff; margin-top: auto; }
-      footer a { color:#C5C5C5;}
+      footer { background-color: #002b7f; padding: 10px 0; text-align: center; color: #fff; margin-top: auto; }
+      footer a { color: #C5C5C5; }
     </style>
   </head>
   <body>
     <div class="banner_home">
-        <div class="banner_db">
-          HỆ THỐNG VĂN BẢN PHÁP LÝ<br>
-          PHỤC VỤ CÔNG TÁC DỰ BÁO THỊ TRƯỜNG LAO ĐỘNG<br>
-          TẠI THÀNH PHỐ HỒ CHÍ MINH
-        </div>
-        <header class="container-fluid py-2 bg-light_db">
-          <div class="row search_website">
-            <div class="col-xs-24 col-sm-24 col-md-24 ads1_home">
-              <div class="input-group">
-                <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa" onkeypress="if(event.key === 'Enter') searchData();">
-                <button class="btn btn-outline-primary" onclick="searchData()">🔍</button>
-              </div>
+      <div class="banner_db">
+        HỆ THỐNG VĂN BẢN PHÁP LÝ<br>
+        PHỤC VỤ CÔNG TÁC DỰ BÁO THỊ TRƯỜNG LAO ĐỘNG<br>
+        TẠI THÀNH PHỐ HỒ CHÍ MINH
+      </div>
+      <header class="container-fluid py-2 bg-light_db">
+        <div class="row search_website">
+          <div class="col-12">
+            <div class="input-group">
+              <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa" onkeypress="if(event.key === 'Enter') searchData();">
+              <button class="btn btn-outline-primary" onclick="searchData()">🔍</button>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
     </div>
-
 
     <div class="container-fluid body_home">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="div-tab" data-bs-toggle="tab" data-bs-target="#divView" type="button" role="tab" aria-controls="divView" aria-selected="false" onclick="openTab('divView')">Danh sách (Div)</button>
+          <button class="nav-link active" id="div-tab" data-bs-toggle="tab" data-bs-target="#divView" type="button" role="tab" aria-controls="divView" aria-selected="true" onclick="openTab('divView')">Danh sách (Div)</button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#addDocument" type="button" role="tab" aria-controls="addDocument" aria-selected="false" onclick="openTab('addDocument')">Thêm Văn bản</button>
+        </li>
+        <li class="nav-item" role="presentation" style="display: none;">
+          <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detailView" type="button" role="tab" aria-controls="detailView" aria-selected="false">Chi tiết</button>
         </li>
       </ul>
 
@@ -87,6 +89,7 @@
             <input type="text" id="inputPdfUrl" class="form-control" placeholder="Dán URL Google Drive công khai">
           </div>
           <button class="btn btn-primary" onclick="submitData()">Submit</button>
+          <div id="errorMessage" class="text-danger"></div>
         </div>
         <div class="tab-pane fade" id="detailView" role="tabpanel" aria-labelledby="detail-tab">
           <div class="detail-container bg-white mt-3">
@@ -97,6 +100,7 @@
             <p><span class="label">Ngày ban hành:</span> <span id="detailNgayBanHanh"></span></p>
             <p><span class="label">PDF URL:</span> <a id="detailPdfUrl" href="#" target="_blank">Xem PDF</a></p>
             <button class="btn btn-secondary" onclick="openTab('divView')">Quay lại</button>
+            <div id="errorMessage" class="text-danger"></div>
           </div>
         </div>
       </div>
@@ -111,7 +115,7 @@
 
     <footer class="mt-3">
       <p>Trung tâm dự báo nhu cầu nhân lực và thông tin thị trường lao động TP. HCM</p>
-      <p>Liên hệ: <a href="mailto: ttttld.sldtbxh@tphcm.gov.vn">ttttld.sldtbxh@tphcm.gov.vn</a> | Hotline:(028) 35889935</p>
+      <p>Liên hệ: <a href="mailto:ttttld.sldtbxh@tphcm.gov.vn">ttttld.sldtbxh@tphcm.gov.vn</a> | Hotline: (028) 35889935</p>
     </footer>
 
     <!-- Bootstrap JS CDN -->
@@ -171,21 +175,25 @@
 
       function displayData(data) {
         allData = data || [];
+        const errorMessages = document.querySelectorAll('#errorMessage');
         const errorMessageDiv = document.querySelector('#errorMessageDiv');
-        errorMessageDiv.innerHTML = '';
+        errorMessages.forEach(el => el.innerHTML = '');
+        if (errorMessageDiv) errorMessageDiv.innerHTML = '';
 
         if (!data || !Array.isArray(data) || data.length <= 1) {
-          errorMessageDiv.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
+          errorMessages.forEach(el => el.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!');
+          if (errorMessageDiv) errorMessageDiv.textContent = 'Không có dữ liệu trong sheet hoặc chỉ có tiêu đề!';
           return;
         }
 
         if (!data[0] || data[0].length < 5) {
-         errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
+          errorMessages.forEach(el => el.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`);
+          if (errorMessageDiv) errorMessageDiv.textContent = `Tiêu đề sheet không đúng định dạng! Cần ít nhất 5 cột: STT, Số/ký hiệu, Trích yếu, Cơ quan ban hành, Ngày ban hành.`;
           return;
         }
+
         renderDivs(allData.slice(1));
       }
-
 
       function renderDivs(rows) {
         const container = document.querySelector('#documentsContainer');
@@ -204,7 +212,6 @@
             <div class="number">${index + 1}</div>
             <div class="title">${title}</div>
             <div class="date">Ngày ban hành: ${row[4] || ''}</div>
-            <!-- <div class="status">Trạng thái: Chưa thông qua</div> -->
             <div class="actions mt-2">
               <button class="btn btn-primary btn-sm me-1" onclick="showDetail(${index + 1})">Xem</button>
               <button class="btn btn-info btn-sm me-1" onclick="viewPdf(${index + 1})">Xem PDF</button>
@@ -221,7 +228,6 @@
           const trichYeu = typeof row[2] === 'string' ? row[2].toLowerCase() : '';
           return soKyHieu.includes(searchTerm) || trichYeu.includes(searchTerm);
         });
-        renderTable(filteredData);
         renderDivs(filteredData);
       }
 
@@ -253,20 +259,15 @@
       }
 
       function showError(error) {
-        document.querySelector('#errorMessage').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
-        document.querySelector('#errorMessageDiv').textContent = 'Lỗi: ' + (error.message || 'Không xác định');
+        const errorMessages = document.querySelectorAll('#errorMessage');
+        const errorMessageDiv = document.querySelector('#errorMessageDiv');
+        const message = 'Lỗi: ' + (error.message || 'Không xác định');
+        errorMessages.forEach(el => el.textContent = message);
+        if (errorMessageDiv) errorMessageDiv.textContent = message;
       }
 
       function openTab(tabId) {
-        // Không cần JS để quản lý tab vì Bootstrap xử lý qua data-bs-toggle
-        // Chỉ cần đảm bảo nội dung được render đúng
-        if (tabId === 'tableView') {
-          if (allData && allData.length > 0) {
-            renderTable(allData.slice(1));
-          } else {
-            renderTable([]);
-          }
-        } else if (tabId === 'divView') {
+        if (tabId === 'divView') {
           if (allData && allData.length > 0) {
             renderDivs(allData.slice(1));
           } else {
@@ -287,8 +288,7 @@
           const pdfLink = document.getElementById('detailPdfUrl');
           pdfLink.href = pdfUrl;
           pdfLink.textContent = pdfUrl ? 'Xem PDF' : 'Không có PDF';
-          // Mở tab chi tiết
-          const detailTab = new bootstrap.Tab(document.querySelector('#detail-tab') || document.querySelector('#div-tab'));
+          const detailTab = new bootstrap.Tab(document.querySelector('#detail-tab'));
           detailTab.show();
         } else {
           alert('Không tìm thấy thông tin văn bản!');
