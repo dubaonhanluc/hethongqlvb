@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
       body { font-family: Arial, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
-      .banner_home { text-align: center; font-size: 1.2rem; font-weight: bold; background: url(https://ai.phapluat.gov.vn/images/lp/bg-trongdong.png); background-color: #002b7f; background-position: center; box-shadow: 0 4px 10px rgba(182, 182, 182, 0.18); color: #fff; position: fixed; z-index: 10; top: 0; right: 0; left: 0; }
+      .banner_home { text-align: center; font-size: 1.2rem; font-weight: bold; background: ur<a href="https://ai.phapluat.gov.vn/images/lp/bg-trongdong.png" target="_blank" rel="noopener noreferrer"></a>; background-color: #002b7f; background-position: center; box-shadow: 0 4px 10px rgba(182, 182, 182, 0.18); color: #fff; position: fixed; z-index: 10; top: 0; right: 0; left: 0; }
       .banner_db { padding: 10px; }
       .bg-light_db { --bs-bg-opacity: 0.1; background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important; width: 60%; border-radius: 10px; margin: 0 auto; }
       .separator-line { border-bottom: 1px solid #ccc; margin: 0; }
@@ -51,9 +51,9 @@
     <div class="container-fluid body_home">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="div-tab" data-bs-toggle="tab" data-bs-target="#divView" type="button" role="tab" aria-controls="divView" aria-selected="true" onclick="openTab('divView')">Danh sách (Div)</button>
+          <button class="nav-link active" id="div-tab" data-bs-toggle="tab" data-bs-target="#divView" type="button" role="tab" aria-controls="divView" aria-selected="true" onclick="openTab('divView')">Danh sách Văn bản</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item" role="presentation" style="display: none;">
           <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#addDocument" type="button" role="tab" aria-controls="addDocument" aria-selected="false" onclick="openTab('addDocument')">Thêm Văn bản</button>
         </li>
         <li class="nav-item" role="presentation" style="display: none;">
@@ -122,7 +122,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
       let allData = [];
-      let currentDocumentIndex = null;
 
       function getDataCallback(data) {
         if (typeof data === 'string' && data.startsWith('Lỗi')) {
@@ -267,17 +266,30 @@
       }
 
       function openTab(tabId) {
-        if (tabId === 'divView') {
-          if (allData && allData.length > 0) {
-            renderDivs(allData.slice(1));
-          } else {
-            renderDivs([]);
+        console.log('Opening tab:', tabId);
+        // Map tabId to correct tab button ID
+        const tabButtonId = tabId === 'divView' ? 'div-tab' : `${tabId}-tab`;
+        const tabButton = document.querySelector(`#${tabButtonId}`);
+        if (tabButton) {
+          try {
+            const tab = new bootstrap.Tab(tabButton);
+            tab.show();
+            console.log('Tab switched to:', tabId);
+          } catch (e) {
+            console.error('Error switching tab:', e);
+            tabButton.click(); // Fallback
           }
+        } else {
+          console.error('Tab button not found for ID:', tabButtonId);
+        }
+        if (tabId === 'divView') {
+          console.log('Rendering divView with data:', allData);
+          renderDivs(allData && allData.length > 1 ? allData.slice(1) : []);
         }
       }
 
       function showDetail(index) {
-        currentDocumentIndex = index;
+        console.log('Showing detail for index:', index);
         if (allData && allData[index]) {
           const row = allData[index];
           document.getElementById('detailSoKyHieu').textContent = row[1] || '';
@@ -292,6 +304,7 @@
           detailTab.show();
         } else {
           alert('Không tìm thấy thông tin văn bản!');
+          console.error('No data found for index:', index, 'allData:', allData);
         }
       }
 
